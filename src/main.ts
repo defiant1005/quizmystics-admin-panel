@@ -3,11 +3,13 @@ import { createPinia } from "pinia";
 import App from "@/App.vue";
 import router from "@/router";
 import "@/scss/index.scss";
-import "@packages/fonts-library/style.css";
+import "element-plus/dist/index.css";
+import ElementPlus from "element-plus";
 
 const app = createApp(App);
 
 app.use(createPinia());
 app.use(router);
+app.use(ElementPlus);
 
 app.mount("#app");

@@ -23,6 +23,6 @@ defineComponent({
   width: 300px;
   height: 200px;
 
-  @include caption;
+  //@include caption;
 }
 </style>

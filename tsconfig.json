@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "esnext",
     "target": "ESNext",
-    "types": ["vite/client", "node", "vitest/globals"],
+    "types": ["vite/client", "node", "vitest/globals", "element-plus/global"],
     "useDefineForClassFields": true,
     "moduleResolution": "Node",
     "strict": true,
