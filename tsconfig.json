@@ -4,7 +4,7 @@
     "target": "ESNext",
     "types": ["vite/client", "node", "vitest/globals", "element-plus/global"],
     "useDefineForClassFields": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "strict": true,
     "sourceMap": true,
     "resolveJsonModule": true,

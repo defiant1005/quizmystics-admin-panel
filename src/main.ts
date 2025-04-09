@@ -12,4 +12,21 @@ app.use(createPinia());
 app.use(router);
 app.use(ElementPlus);
 
+app.directive("disable-validation", {
+  mounted(el) {
+    if (el.tagName === "FORM") {
+      el.setAttribute("novalidate", "");
+    }
+  },
+});
+
+app.mixin({
+  mounted() {
+    const forms = document.querySelectorAll("form");
+    forms.forEach((form) => {
+      form.setAttribute("novalidate", "");
+    });
+  },
+});
+
 app.mount("#app");

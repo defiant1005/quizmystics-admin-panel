@@ -1,37 +1,13 @@
 <script lang="ts" setup>
-import { computed, defineComponent, onMounted, ref } from "vue";
-import { usePostStore } from "@/modules/post-page/store";
-import PostCard from "@/modules/post-page/components/PostCard.vue";
+import { defineComponent } from "vue";
 
 defineComponent({
   name: "PostsPage",
 });
-
-const postStore = usePostStore();
-const posts = computed(() => postStore.posts);
-const isLoading = ref(false);
-
-onMounted(async () => {
-  try {
-    isLoading.value = true;
-    await postStore.getPosts();
-  } finally {
-    isLoading.value = false;
-  }
-});
 </script>
 
 <template>
-  <div
-    v-if="!isLoading"
-    class="posts-page"
-  >
-    <PostCard
-      v-for="post in posts"
-      :key="post.id"
-      :post="post"
-    />
-  </div>
+  <h2>home</h2>
 </template>
 
 <style lang="scss" scoped>
