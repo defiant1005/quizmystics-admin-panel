@@ -15,7 +15,7 @@ router.beforeEach((to) => {
   }
 
   if (authStore.isAuthenticated && to.meta.isAuthPage) {
-    return { name: RouteNames.HOME_VIEW };
+    return { name: RouteNames.ADMINS_VIEW };
   }
 
   // @ts-ignore

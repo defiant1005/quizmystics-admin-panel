@@ -36,11 +36,13 @@ const submitForm = async () => {
     isLoading.value = false;
 
     await authStore.login(loginForm);
-    resetForm();
+    await authStore.getMe();
 
     await router.replace({
-      name: RouteNames.HOME_VIEW,
+      name: RouteNames.ADMINS_VIEW,
     });
+
+    resetForm();
   } catch (e: unknown) {
     const errorMessage = errorHandler(e);
 

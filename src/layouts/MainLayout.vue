@@ -1,18 +1,25 @@
 <script lang="ts" setup>
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, onMounted, ref } from "vue";
 import { useAuthStore } from "@/modules/auth/store";
 import { errorHandler } from "@/package/global-helpers/error-handler";
 import { ElNotification } from "element-plus";
 import { useRouter } from "vue-router";
 import { RouteNames } from "@/router/routes";
+import MainAside from "@/package/global-components/MainAside.vue";
+import { translateRole } from "@/modules/admins/helpers/translate-role";
 
 defineComponent({
   name: "MainLayout",
 });
 
 const authStore = useAuthStore();
+
 const router = useRouter();
+const isWrapperLoading = ref(false);
 const isLoading = ref(false);
+
+const _meData = computed(() => authStore._meData);
+const isMeEmpty = computed(() => authStore.isMeEmpty);
 
 const exit = async () => {
   isLoading.value = true;
@@ -35,18 +42,35 @@ const exit = async () => {
     isLoading.value = false;
   }
 };
+
+onMounted(async () => {
+  if (authStore.isMeEmpty) {
+    try {
+      isWrapperLoading.value = true;
+      await authStore.getMe();
+    } finally {
+      isWrapperLoading.value = false;
+    }
+  }
+});
 </script>
 
 <template>
-  <div class="main-layout">
-    <header>
+  <ElContainer v-loading="isWrapperLoading" class="main-layout">
+    <ElHeader v-if="!isMeEmpty">
+      <p>{{ _meData.email }}</p>
+      <p>{{ translateRole(_meData.role) }}</p>
       <ElButton :loading="isLoading" @click="exit">Выйти</ElButton>
-    </header>
+    </ElHeader>
 
-    <main>
-      <RouterView />
-    </main>
-  </div>
+    <ElContainer class="main-layout__container">
+      <MainAside />
+
+      <ElMain>
+        <RouterView v-if="!isWrapperLoading" />
+      </ElMain>
+    </ElContainer>
+  </ElContainer>
 </template>
 
 <style lang="scss" scoped>
@@ -55,18 +79,26 @@ const exit = async () => {
   display: grid;
   grid-template-rows: min-content 1fr;
 
-  > header {
+  .el-header {
+    position: relative;
+
     padding: 0 20px;
     height: 80px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    background: rgb(235, 180.6, 99);
+    gap: 12px;
+    background-color: var(--el-color-primary-light-7);
   }
 
-  > main {
+  &__container {
     height: 100%;
     overflow-y: auto;
+    padding: 0;
+
+    .el-main {
+      padding: 0;
+    }
   }
 }
 </style>

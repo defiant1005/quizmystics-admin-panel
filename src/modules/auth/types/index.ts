@@ -1,3 +1,5 @@
+import { IAdmin } from "@/modules/admins/types";
+
 export interface ILoginForm {
   email: string;
   password: string;
@@ -5,25 +7,14 @@ export interface ILoginForm {
 
 export interface ILoginParams extends ILoginForm {}
 
-export enum AdminRole {
-  SUPER_ADMIN = "super_admin",
-  ADMIN = "admin",
-}
-
-export interface IUser {
-  id: number;
-  email: string;
-  role: AdminRole;
-}
-
 export interface ILoginResponse {
   data: {
     accessToken: string;
     refreshToken: string;
-    user: IUser;
+    user: IAdmin;
   };
 }
 
-export interface ILogoutParams {
+export interface IRefreshParams {
   refreshToken: string;
 }
