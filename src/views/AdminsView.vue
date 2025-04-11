@@ -3,6 +3,8 @@ import { computed, defineComponent, onMounted, ref } from "vue";
 import { useAdminStore } from "@/modules/admins/store";
 import { translateRole } from "@/modules/admins/helpers/translate-role";
 import CreateAdminModal from "@/modules/admins/components/CreateAdminModal.vue";
+import { errorHandler } from "@/package/global-helpers/error-handler";
+import { ElNotification } from "element-plus";
 
 defineComponent({
   name: "AdminsView",
@@ -13,6 +15,42 @@ const isAdminListEmpty = computed(() => adminStore.isAdminListEmpty);
 const adminList = computed(() => adminStore.adminList);
 
 const isLoading = ref(false);
+const isEditLoading = ref(false);
+
+const handleDelete = (index: number, row: any) => {
+  console.log("Edit admin", index, row);
+};
+
+const handleEdit = async (_adminId: number) => {
+  adminId.value = _adminId;
+
+  try {
+    isEditLoading.value = true;
+    await adminStore.getAdminById(adminId.value);
+    isAdminMutationDataModal.value = true;
+  } catch (e) {
+    const errorMessage = errorHandler(e);
+
+    ElNotification({
+      title: "Что-то пошло не так",
+      message: `${errorMessage}`,
+      type: "error",
+    });
+  } finally {
+    isEditLoading.value = false;
+  }
+};
+
+const isAdminMutationDataModal = ref(false);
+
+const adminId = ref<null | number>(null);
+
+const closeHandler = (modelValue: boolean) => {
+  if (!modelValue) {
+    adminId.value = null;
+    adminStore.removeCurrentAdmin();
+  }
+};
 
 onMounted(async () => {
   if (isAdminListEmpty.value) {
@@ -25,16 +63,6 @@ onMounted(async () => {
     }
   }
 });
-
-const handleDelete = (index: number, row: any) => {
-  console.log("Edit admin", index, row);
-};
-
-const handleEdit = (index: number, row: any) => {
-  console.log("Edit admin", index, row);
-};
-
-const isCreateAdminModal = ref(false);
 </script>
 
 <template>
@@ -52,11 +80,17 @@ const isCreateAdminModal = ref(false);
 
       <ElTableColumn label="Operations">
         <template #header>
-          <ElButton @click="isCreateAdminModal = true">Создать админа</ElButton>
+          <ElButton @click="isAdminMutationDataModal = true">
+            Создать админа
+          </ElButton>
         </template>
 
         <template #default="scope">
-          <ElButton size="small" @click="handleEdit(scope.$index, scope.row)">
+          <ElButton
+            size="small"
+            :disabled="isEditLoading"
+            @click="handleEdit(scope.row.id)"
+          >
             Редактировать
           </ElButton>
 
@@ -71,7 +105,11 @@ const isCreateAdminModal = ref(false);
       </ElTableColumn>
     </ElTable>
 
-    <CreateAdminModal v-model="isCreateAdminModal" />
+    <CreateAdminModal
+      v-model="isAdminMutationDataModal"
+      :admin-id="adminId"
+      @update:modelValue="closeHandler"
+    />
   </ElScrollbar>
 </template>
 

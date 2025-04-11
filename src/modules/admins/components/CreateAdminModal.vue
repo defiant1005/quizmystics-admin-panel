@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { computed, ref, PropType, watch } from "vue";
 import { useCreateAdmin } from "@/modules/admins/composables/use-create-admin";
-import { AdminRole } from "@/modules/admins/types";
+import { AdminRole, IAdmin } from "@/modules/admins/types";
 import { errorHandler } from "@/package/global-helpers/error-handler";
 import { ElNotification } from "element-plus";
 import { useAdminStore } from "@/modules/admins/store";
@@ -10,6 +10,11 @@ const props = defineProps({
   modelValue: {
     type: Boolean,
     default: false,
+  },
+
+  adminId: {
+    type: [Number, null] as PropType<number | null>,
+    default: null,
   },
 });
 
@@ -26,6 +31,7 @@ defineOptions({
 });
 
 const adminStore = useAdminStore();
+const currentAdmin = computed<IAdmin | null>(() => adminStore.currentAdmin);
 
 const {
   createAdminForm,
@@ -43,15 +49,41 @@ const closeModal = () => {
   resetForm();
 };
 
+const isEdit = computed(() => props.adminId !== null);
+
 const isLoading = ref(false);
 
-const submitForm = async () => {
-  runValidate();
-
-  if (isError.value) {
+const editAdminSubmit = async () => {
+  if (!isEdit.value) {
     return;
   }
 
+  try {
+    isLoading.value = true;
+    await adminStore.editAdmin(props.adminId, createAdminForm);
+    await adminStore.getAdmins();
+
+    ElNotification({
+      title: "Успешно",
+      message: "Админ отредактирован",
+      type: "success",
+    });
+
+    closeModal();
+  } catch (e) {
+    const errorMessage = errorHandler(e);
+
+    ElNotification({
+      title: "Что-то пошло не так",
+      message: `${errorMessage}`,
+      type: "error",
+    });
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const createAdminSubmit = async () => {
   try {
     isLoading.value = true;
     await adminStore.createAdmins(createAdminForm);
@@ -76,10 +108,47 @@ const submitForm = async () => {
     isLoading.value = false;
   }
 };
+
+const submitForm = async () => {
+  runValidate();
+
+  if (isError.value) {
+    return;
+  }
+
+  if (isEdit.value) {
+    await editAdminSubmit();
+    return;
+  }
+
+  await createAdminSubmit();
+};
+
+const setDefaultData = () => {
+  if (currentAdmin.value === null) {
+    return;
+  }
+
+  createAdminForm.email = currentAdmin.value.email;
+  createAdminForm.role = currentAdmin.value.role;
+};
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    if (newValue && isEdit.value) {
+      setDefaultData();
+    }
+  }
+);
 </script>
 
 <template>
-  <ElDialog v-model="_modelValue" title="Создание админа" width="500">
+  <ElDialog
+    v-model="_modelValue"
+    :title="isEdit ? 'Редактирование админа' : 'Создание админа'"
+    width="500"
+  >
     <ElForm :model="createAdminForm" @submit.prevent="submitForm">
       <ElFormItem label-position="top" label="Email">
         <ElInput

@@ -1,11 +1,17 @@
 import { defineStore } from "pinia";
 import { errorHandler } from "@/package/global-helpers/error-handler";
 import { IAdmin, ICreateAdminParams } from "@/modules/admins/types";
-import { apiCreateAdmin, apiGetAdmins } from "@/modules/admins/api";
+import {
+  apiCreateAdmin,
+  apiEditAdmin,
+  apiGetAdminById,
+  apiGetAdmins,
+} from "@/modules/admins/api";
 
 export const useAdminStore = defineStore("admin-store", {
   state: () => ({
     admins: null as null | Array<IAdmin>,
+    currentAdmin: null as null | IAdmin,
   }),
 
   getters: {
@@ -29,9 +35,32 @@ export const useAdminStore = defineStore("admin-store", {
       }
     },
 
+    async getAdminById(adminId: number) {
+      try {
+        const response = await apiGetAdminById(adminId);
+        this.currentAdmin = response.data.data;
+      } catch (e) {
+        errorHandler(e);
+        throw e;
+      }
+    },
+
+    removeCurrentAdmin() {
+      this.currentAdmin = null;
+    },
+
     async createAdmins(params: ICreateAdminParams) {
       try {
         await apiCreateAdmin(params);
+      } catch (e) {
+        errorHandler(e);
+        throw e;
+      }
+    },
+
+    async editAdmin(adminId: number, params: ICreateAdminParams) {
+      try {
+        await apiEditAdmin(adminId, params);
       } catch (e) {
         errorHandler(e);
         throw e;

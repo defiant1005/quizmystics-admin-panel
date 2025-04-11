@@ -13,6 +13,10 @@ export interface IAdminResponse {
   data: IAdmin[];
 }
 
+export interface ICurrentAdminResponse {
+  data: IAdmin;
+}
+
 export interface IGetMeResponse {
   data: IAdmin;
 }
