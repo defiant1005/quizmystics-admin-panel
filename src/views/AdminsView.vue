@@ -16,9 +16,24 @@ const adminList = computed(() => adminStore.adminList);
 
 const isLoading = ref(false);
 const isEditLoading = ref(false);
+const isDeleteDisabled = ref(false);
 
-const handleDelete = (index: number, row: any) => {
-  console.log("Edit admin", index, row);
+const handleDelete = async (adminId: number) => {
+  try {
+    isDeleteDisabled.value = true;
+    await adminStore.deleteAdmin(adminId);
+    await adminStore.getAdmins();
+  } catch (e) {
+    const errorMessage = errorHandler(e);
+
+    ElNotification({
+      title: "Что-то пошло не так",
+      message: `${errorMessage}`,
+      type: "error",
+    });
+  } finally {
+    isDeleteDisabled.value = false;
+  }
 };
 
 const handleEdit = async (_adminId: number) => {
@@ -96,8 +111,9 @@ onMounted(async () => {
 
           <ElButton
             size="small"
+            :disabled="isDeleteDisabled"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)"
+            @click="handleDelete(scope.row.id)"
           >
             Удалить
           </ElButton>

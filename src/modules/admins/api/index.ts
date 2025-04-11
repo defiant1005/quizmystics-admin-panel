@@ -23,3 +23,7 @@ export const apiCreateAdmin = (params: ICreateAdminParams) => {
 export const apiEditAdmin = (adminId: number, params: ICreateAdminParams) => {
   return API.put(`admin/admins/${adminId}`, params);
 };
+
+export const apiDeleteAdmin = (adminId: number) => {
+  return API.delete(`admin/admins/${adminId}`);
+};

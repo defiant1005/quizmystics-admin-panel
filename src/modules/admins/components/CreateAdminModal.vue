@@ -194,7 +194,7 @@ watch(
         <ElButton @click="closeModal">Отмена</ElButton>
 
         <ElButton type="primary" :disabled="isLoading" @click="submitForm">
-          Создать
+          Сохранить
         </ElButton>
       </div>
     </template>

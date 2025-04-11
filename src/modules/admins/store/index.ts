@@ -3,6 +3,7 @@ import { errorHandler } from "@/package/global-helpers/error-handler";
 import { IAdmin, ICreateAdminParams } from "@/modules/admins/types";
 import {
   apiCreateAdmin,
+  apiDeleteAdmin,
   apiEditAdmin,
   apiGetAdminById,
   apiGetAdmins,
@@ -61,6 +62,15 @@ export const useAdminStore = defineStore("admin-store", {
     async editAdmin(adminId: number, params: ICreateAdminParams) {
       try {
         await apiEditAdmin(adminId, params);
+      } catch (e) {
+        errorHandler(e);
+        throw e;
+      }
+    },
+
+    async deleteAdmin(adminId: number) {
+      try {
+        await apiDeleteAdmin(adminId);
       } catch (e) {
         errorHandler(e);
         throw e;
