@@ -3,17 +3,24 @@ import LoginLayout from "@/layouts/LoginLayout.vue";
 
 export enum RouteNames {
   LOGIN_LAYOUT = "LoginLayout",
-  LOGIN_VIEW = "LoginView",
   MAIN_LAYOUT = "MainLayout",
+
+  LOGIN_VIEW = "LoginView",
   ADMINS_VIEW = "AdminsView",
+  CATEGORY_VIEW = "CategoryView",
+
   NOT_FOUND = "NotFound",
 }
 
 export const RoutePaths: Record<RouteNames, string> = {
   [RouteNames.LOGIN_LAYOUT]: "/login",
-  [RouteNames.LOGIN_VIEW]: "",
   [RouteNames.MAIN_LAYOUT]: "/",
-  [RouteNames.ADMINS_VIEW]: "",
+
+  [RouteNames.LOGIN_VIEW]: "",
+
+  [RouteNames.ADMINS_VIEW]: "/admins",
+  [RouteNames.CATEGORY_VIEW]: "/categories",
+
   [RouteNames.NOT_FOUND]: "/:pathMatch(.*)*",
 };
 
@@ -37,11 +44,19 @@ export const routes: RouteRecordRaw[] = [
     path: RoutePaths.MainLayout,
     name: RouteNames.MAIN_LAYOUT,
     component: () => import("@/layouts/MainLayout.vue"),
+    redirect: {
+      name: RouteNames.ADMINS_VIEW,
+    },
     children: [
       {
         path: RoutePaths.AdminsView,
         name: RouteNames.ADMINS_VIEW,
         component: () => import("@/views/AdminsView.vue"),
+      },
+      {
+        path: RoutePaths.CategoryView,
+        name: RouteNames.CATEGORY_VIEW,
+        component: () => import("@/views/CategoryView.vue"),
       },
     ],
   },
