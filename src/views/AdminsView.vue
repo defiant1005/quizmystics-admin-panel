@@ -2,6 +2,7 @@
 import { computed, defineComponent, onMounted, ref } from "vue";
 import { useAdminStore } from "@/modules/admins/store";
 import { translateRole } from "@/modules/admins/helpers/translate-role";
+import CreateAdminModal from "@/modules/admins/components/CreateAdminModal.vue";
 
 defineComponent({
   name: "AdminsView",
@@ -32,6 +33,8 @@ const handleDelete = (index: number, row: any) => {
 const handleEdit = (index: number, row: any) => {
   console.log("Edit admin", index, row);
 };
+
+const isCreateAdminModal = ref(false);
 </script>
 
 <template>
@@ -49,7 +52,7 @@ const handleEdit = (index: number, row: any) => {
 
       <ElTableColumn label="Operations">
         <template #header>
-          <ElButton>Создать админа</ElButton>
+          <ElButton @click="isCreateAdminModal = true">Создать админа</ElButton>
         </template>
 
         <template #default="scope">
@@ -67,6 +70,8 @@ const handleEdit = (index: number, row: any) => {
         </template>
       </ElTableColumn>
     </ElTable>
+
+    <CreateAdminModal v-model="isCreateAdminModal" />
   </ElScrollbar>
 </template>
 

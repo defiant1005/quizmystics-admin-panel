@@ -16,3 +16,11 @@ export interface IAdminResponse {
 export interface IGetMeResponse {
   data: IAdmin;
 }
+
+export interface ICreateAdminForm {
+  email: string;
+  password: string;
+  role: AdminRole;
+}
+
+export interface ICreateAdminParams extends ICreateAdminForm {}
