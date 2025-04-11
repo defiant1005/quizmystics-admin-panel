@@ -24,16 +24,46 @@ onMounted(async () => {
     }
   }
 });
+
+const handleDelete = (index: number, row: any) => {
+  console.log("Edit admin", index, row);
+};
+
+const handleEdit = (index: number, row: any) => {
+  console.log("Edit admin", index, row);
+};
 </script>
 
 <template>
   <ElScrollbar>
-    <ElTable v-loading="isLoading" :data="adminList">
+    <ElTable v-loading="isLoading" :data="adminList" border>
       <ElTableColumn prop="id" label="ID" width="140" />
+
       <ElTableColumn prop="email" label="Почта" />
+
       <ElTableColumn prop="role" label="Роль">
         <template #default="{ row }">
           {{ translateRole(row.role) }}
+        </template>
+      </ElTableColumn>
+
+      <ElTableColumn label="Operations">
+        <template #header>
+          <ElButton>Создать админа</ElButton>
+        </template>
+
+        <template #default="scope">
+          <ElButton size="small" @click="handleEdit(scope.$index, scope.row)">
+            Редактировать
+          </ElButton>
+
+          <ElButton
+            size="small"
+            type="danger"
+            @click="handleDelete(scope.$index, scope.row)"
+          >
+            Удалить
+          </ElButton>
         </template>
       </ElTableColumn>
     </ElTable>
