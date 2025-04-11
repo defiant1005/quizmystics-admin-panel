@@ -200,8 +200,3 @@ watch(
     </template>
   </ElDialog>
 </template>
-
-<style lang="scss" scoped>
-.create-admin-modal {
-}
-</style>

@@ -128,14 +128,3 @@ onMounted(async () => {
     />
   </ElScrollbar>
 </template>
-
-<style lang="scss">
-.posts-page {
-  padding: 30px;
-  height: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-}
-</style>

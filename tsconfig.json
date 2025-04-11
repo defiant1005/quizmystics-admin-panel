@@ -2,7 +2,13 @@
   "compilerOptions": {
     "module": "esnext",
     "target": "ESNext",
-    "types": ["vite/client", "node", "vitest/globals", "element-plus/global"],
+    "types": [
+      "vite/client",
+      "node",
+      "vitest/globals",
+      "element-plus/global",
+      "vue"
+    ],
     "useDefineForClassFields": true,
     "moduleResolution": "bundler",
     "strict": true,
