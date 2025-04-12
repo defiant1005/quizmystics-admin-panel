@@ -139,6 +139,10 @@ watch(
     if (newValue && isEdit.value) {
       setDefaultData();
     }
+
+    if (!newValue) {
+      resetForm();
+    }
   }
 );
 </script>

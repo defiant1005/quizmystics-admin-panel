@@ -8,6 +8,7 @@ export enum RouteNames {
   LOGIN_VIEW = "LoginView",
   ADMINS_VIEW = "AdminsView",
   CATEGORY_VIEW = "CategoryView",
+  QUESTION_VIEW = "QuestionView",
 
   NOT_FOUND = "NotFound",
 }
@@ -20,6 +21,7 @@ export const RoutePaths: Record<RouteNames, string> = {
 
   [RouteNames.ADMINS_VIEW]: "/admins",
   [RouteNames.CATEGORY_VIEW]: "/categories",
+  [RouteNames.QUESTION_VIEW]: "/question",
 
   [RouteNames.NOT_FOUND]: "/:pathMatch(.*)*",
 };
@@ -57,6 +59,11 @@ export const routes: RouteRecordRaw[] = [
         path: RoutePaths.CategoryView,
         name: RouteNames.CATEGORY_VIEW,
         component: () => import("@/views/CategoryView.vue"),
+      },
+      {
+        path: RoutePaths.QuestionView,
+        name: RouteNames.QUESTION_VIEW,
+        component: () => import("@/views/QuestionView.vue"),
       },
     ],
   },

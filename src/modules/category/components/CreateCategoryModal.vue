@@ -134,6 +134,10 @@ watch(
     if (newValue && isEdit.value) {
       setDefaultData();
     }
+
+    if (!newValue) {
+      resetForm();
+    }
   }
 );
 </script>
@@ -145,10 +149,10 @@ watch(
     width="500"
   >
     <ElForm :model="createCategoryForm" @submit.prevent="submitForm">
-      <ElFormItem label-position="top" label="Title">
+      <ElFormItem label-position="top" label="Заголовок">
         <ElInput
           v-model="createCategoryForm.title"
-          placeholder="Title"
+          placeholder="Заголовок"
           name="title"
           size="large"
         />

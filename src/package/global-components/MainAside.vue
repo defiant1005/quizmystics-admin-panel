@@ -27,6 +27,15 @@ defineOptions({
             Категории
           </RouterLink>
         </ElMenuItem>
+
+        <ElMenuItem>
+          <RouterLink
+            :to="{ name: RouteNames.QUESTION_VIEW }"
+            active-class="active-link"
+          >
+            Вопросы
+          </RouterLink>
+        </ElMenuItem>
       </ElMenu>
     </ElScrollbar>
   </ElAside>
