@@ -36,6 +36,15 @@ defineOptions({
             Вопросы
           </RouterLink>
         </ElMenuItem>
+
+        <ElMenuItem>
+          <RouterLink
+            :to="{ name: RouteNames.ABILITY_VIEW }"
+            active-class="active-link"
+          >
+            Способности
+          </RouterLink>
+        </ElMenuItem>
       </ElMenu>
     </ElScrollbar>
   </ElAside>

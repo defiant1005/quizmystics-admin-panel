@@ -6,6 +6,7 @@ import { useQuestionStore } from "@/modules/question/store";
 import { AnswerVariant, IQuestion } from "@/modules/question/types";
 import { useCreateQuestion } from "@/modules/question/composables/use-create-question";
 import { useCategoryStore } from "@/modules/category/store";
+import { normalizeForm } from "@/modules/question/helpers/normalize-form";
 
 const props = defineProps({
   modelValue: {
@@ -71,7 +72,10 @@ const editQuestionSubmit = async () => {
 
   try {
     isLoading.value = true;
-    await questionStore.editQuestion(props.questionId!, createQuestionForm);
+    await questionStore.editQuestion(
+      props.questionId!,
+      normalizeForm(createQuestionForm)
+    );
     await questionStore.getQuestions();
 
     ElNotification({
@@ -97,7 +101,7 @@ const editQuestionSubmit = async () => {
 const createQuestionSubmit = async () => {
   try {
     isLoading.value = true;
-    await questionStore.createQuestion(createQuestionForm);
+    await questionStore.createQuestion(normalizeForm(createQuestionForm));
     await questionStore.getQuestions();
 
     ElNotification({
