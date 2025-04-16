@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useAuthStore } from "@/modules/auth/store";
-import { useRouter } from "vue-router";
 import { RouteNames } from "@/router/routes";
+import router from "@/router";
 
 export const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -30,19 +30,21 @@ API.interceptors.response.use(
   },
   async function (error) {
     const originalRequest = error.config;
+    const authStore = useAuthStore();
 
     if (error.response.status === 403 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      const authStore = useAuthStore();
       try {
+        if (!authStore.isRefreshToken) {
+          await authStore.logout();
+          await router.replace({ name: RouteNames.LOGIN_VIEW });
+        }
+
         await authStore.refreshTokens();
 
         return API(originalRequest);
       } catch (refreshError) {
-        const authStore = useAuthStore();
-        const router = useRouter();
-
         await authStore.logout();
         await router.replace({ name: RouteNames.LOGIN_VIEW });
         return Promise.reject(refreshError);

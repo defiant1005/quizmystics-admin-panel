@@ -24,6 +24,10 @@ export const useAuthStore = defineStore("auth-store", {
       return Boolean(this.accessToken);
     },
 
+    isRefreshToken(): boolean {
+      return Boolean(this.refreshToken);
+    },
+
     _meData(store): IAdmin {
       return store.meData === null ? {} : store.meData;
     },
@@ -51,8 +55,18 @@ export const useAuthStore = defineStore("auth-store", {
       }
     },
 
+    zeroingTokens() {
+      cookies.remove("access_token");
+      cookies.remove("refresh_token");
+
+      this.accessToken = null;
+      this.refreshToken = null;
+    },
+
     async logout() {
       if (!this.refreshToken) {
+        this.zeroingTokens();
+
         return;
       }
 
@@ -62,11 +76,7 @@ export const useAuthStore = defineStore("auth-store", {
         };
         await apiLogout(params);
 
-        cookies.remove("access_token");
-        cookies.remove("refresh_token");
-
-        this.accessToken = null;
-        this.refreshToken = null;
+        this.zeroingTokens();
       } catch (e) {
         errorHandler(e);
         throw e;

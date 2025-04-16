@@ -45,6 +45,15 @@ defineOptions({
             Способности
           </RouterLink>
         </ElMenuItem>
+
+        <ElMenuItem>
+          <RouterLink
+            :to="{ name: RouteNames.CHARACTER_CLASS_VIEW }"
+            active-class="active-link"
+          >
+            Классы персонажей
+          </RouterLink>
+        </ElMenuItem>
       </ElMenu>
     </ElScrollbar>
   </ElAside>
