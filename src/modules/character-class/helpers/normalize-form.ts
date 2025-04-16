@@ -14,5 +14,3 @@ export function normalizeForm(
     abilities: characterClassForm.cooldowns,
   };
 }
-
-const test = {};
