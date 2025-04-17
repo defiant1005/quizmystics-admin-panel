@@ -1,4 +1,4 @@
-import { computed, reactive, ref, unref } from "vue";
+import { computed, reactive, unref } from "vue";
 import { helpers, required } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import { ICharacterClassForm } from "@/modules/character-class/types";
@@ -26,11 +26,11 @@ export function useCreateCharacterClass() {
   };
 
   const checkCooldownsHandler = () => {
-    return (
-      createCharacterClassForm.selectedAbilities.length ===
-        createCharacterClassForm.cooldowns.length &&
-      !createCharacterClassForm.cooldowns.find((item) => item.cooldown < 1)
-    );
+    const { selectedAbilities, cooldowns } = createCharacterClassForm;
+    if (selectedAbilities.length !== cooldowns.length) {
+      return false;
+    }
+    return cooldowns.every((item) => item.cooldown >= 1);
   };
 
   const rules = computed(() => ({
@@ -145,8 +145,6 @@ export function useCreateCharacterClass() {
     }
   };
 
-  const currentCooldowns = ref([]);
-
   const updateCooldownHandler = (cooldown: unknown, abilityId: number) => {
     if (typeof cooldown !== "number") {
       return;
@@ -181,7 +179,6 @@ export function useCreateCharacterClass() {
     isError,
     resetForm,
     updateSelectedAbilitiesHandler,
-    currentCooldowns,
     updateCooldownHandler,
   };
 }

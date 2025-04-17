@@ -6,7 +6,7 @@ import { useCreateCharacterClass } from "@/modules/character-class/composables/u
 import { normalizeForm } from "@/modules/character-class/helpers/normalize-form";
 import { useCharacterClassStore } from "@/modules/character-class/store";
 import { ICharacterClass } from "@/modules/character-class/types";
-import { useAbilityStore } from "@/modules/ability/store";
+import { useCheckAbilityName } from "@/modules/ability/composables/use-check-ability-name";
 
 const props = defineProps({
   modelValue: {
@@ -33,16 +33,8 @@ const _modelValue = computed({
 });
 
 const characterClassStore = useCharacterClassStore();
-const abilityStore = useAbilityStore();
 
-const abilitiesList = computed(() => {
-  return abilityStore.abilitiesList.map((ability) => {
-    return {
-      label: ability.title,
-      value: ability.id,
-    };
-  });
-});
+const { abilitiesList, checkAbilityName } = useCheckAbilityName();
 
 const currentCharacterClass = computed<ICharacterClass | null>(
   () => characterClassStore.currentCharacterClass
@@ -60,7 +52,6 @@ const {
   isError,
   resetForm,
   updateSelectedAbilitiesHandler,
-  currentCooldowns,
   updateCooldownHandler,
 } = useCreateCharacterClass();
 
@@ -161,7 +152,15 @@ const setDefaultData = () => {
     currentCharacterClass.value.description;
   createCharacterClassForm.luck = currentCharacterClass.value.luck.toString();
   createCharacterClassForm.lives = currentCharacterClass.value.lives;
-  // createCharacterClassForm.abilities = currentCharacterClass.value.lives;
+  createCharacterClassForm.selectedAbilities =
+    currentCharacterClass.value.abilities.map((ability) => ability.id);
+  createCharacterClassForm.cooldowns =
+    currentCharacterClass.value.abilities.map((ability) => {
+      return {
+        abilityId: ability.id,
+        cooldown: ability.cooldown,
+      };
+    });
 };
 
 watch(
@@ -176,12 +175,6 @@ watch(
     }
   }
 );
-
-const checkAbilityName = (abilityId: number) => {
-  return (
-    abilitiesList.value.find((item) => item.value === abilityId)?.label ?? "-"
-  );
-};
 </script>
 
 <template>
@@ -234,16 +227,18 @@ const checkAbilityName = (abilityId: number) => {
       >
         <div class="ability-cooldown">
           <div
-            v-for="(
-              abilityId, index
-            ) in createCharacterClassForm.selectedAbilities"
+            v-for="abilityId in createCharacterClassForm.selectedAbilities"
             :key="abilityId"
             class="ability-cooldown__item"
           >
             <p class="label">{{ checkAbilityName(abilityId) }}</p>
 
             <ElInputNumber
-              v-model="currentCooldowns[index]"
+              v-model="
+                createCharacterClassForm.cooldowns.find(
+                  (item) => item.abilityId === abilityId
+                )!.cooldown
+              "
               :min="1"
               size="large"
               name="ability"

@@ -6,6 +6,8 @@ import { ElNotification } from "element-plus";
 import { useCharacterClassStore } from "@/modules/character-class/store";
 import CreateCharacterClassModal from "@/modules/character-class/components/CreateCharacterClassModal.vue";
 import { useAbilityStore } from "@/modules/ability/store";
+import { useCheckAbilityName } from "@/modules/ability/composables/use-check-ability-name";
+import { ICharacterClass } from "@/modules/character-class/types";
 
 defineOptions({
   name: "CharacterClassView",
@@ -14,7 +16,11 @@ defineOptions({
 const classStore = useCharacterClassStore();
 const abilityStore = useAbilityStore();
 
-const characterClassesList = computed(() => classStore.characterClassesList);
+const characterClassesList = computed<ICharacterClass[]>(
+  () => classStore.characterClassesList
+);
+
+const { checkAbilityName } = useCheckAbilityName();
 
 const isLoading = ref(false);
 const isModalOpen = ref(false);
@@ -95,6 +101,19 @@ onMounted(async () => {
 
       <ElTableColumn prop="lives" label="Количество жизней" />
 
+      <ElTableColumn prop="abilities" label="Способности">
+        <template #default="{ row }">
+          <p
+            v-for="(ability, index) in row.abilities"
+            :key="index"
+            class="character-abilities"
+          >
+            <span>{{ ability.title }} — </span>
+            <span>{{ ability.cooldown }}</span>
+          </p>
+        </template>
+      </ElTableColumn>
+
       <ElTableColumn label="Operations">
         <template #header>
           <ElButton @click="isModalOpen = true"> Создать класс </ElButton>
@@ -128,3 +147,11 @@ onMounted(async () => {
     />
   </ElScrollbar>
 </template>
+
+<style scoped lang="scss">
+.character-abilities {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+</style>

@@ -1,3 +1,5 @@
+import { IAbility } from "@/modules/ability/types";
+
 export type CharacterLives = 1 | 2 | 3;
 
 export interface IAbilitiesCooldown {
@@ -5,7 +7,11 @@ export interface IAbilitiesCooldown {
   cooldown: number;
 }
 
-export interface ICharacterAbility {
+export interface ICharacterAbility extends IAbility {
+  cooldown: number;
+}
+
+export interface ICharacterAbilityParams {
   abilityId: number;
   cooldown: number;
 }
@@ -32,7 +38,7 @@ export interface ICharacterClassParams
     "luck" | "cooldowns" | "selectedAbilities"
   > {
   luck: number;
-  abilities: ICharacterAbility[];
+  abilities: ICharacterAbilityParams[];
 }
 
 export interface ICharacterClassResponse {
