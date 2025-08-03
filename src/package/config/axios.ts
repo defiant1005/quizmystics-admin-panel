@@ -41,7 +41,7 @@ API.interceptors.response.use(
           await router.replace({ name: RouteNames.LOGIN_VIEW });
         }
 
-        await authStore.refreshTokens();
+        // await authStore.refreshTokens();
 
         return API(originalRequest);
       } catch (refreshError) {

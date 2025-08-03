@@ -1,7 +1,4 @@
-# vue-project-template
-
-Шаблон проектов с использованием Vue3 +
-Vite + [Модульная архитектура](https://digitlab.atlassian.net/wiki/spaces/REG/pages/600408088)
+# quizmystics-admin-panel
 
 ## Project Setup
 
